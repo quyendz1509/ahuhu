@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Trang Start</title>
+</head>
+<body>
+  <h1>Trang Start</h1>
+  <button onclick="startTimer()">Bắt đầu</button>
+  <button onclick="pauseTimer()">Dừng thời gian</button>
+  <button onclick="reloadPage()">Reload</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    function startTimer() {
+      socket.emit('start-timer');
+    }
+
+    function pauseTimer() {
+      socket.emit('pause-timer');
+    }
+
+
+    function reloadPage() {
+      socket.emit('reload-page');
+    }
+  </script>
+</body>
+</html>

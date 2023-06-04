@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Progress Bar</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+  <style>
+
+  </style>
+</head>
+<body>
+  <div class="container mx-auto p-4 text-2xl">
+    <div class="w-full bg-gray-400 rounded-full h-4 rounded">
+      <div id="progress-bar" class="bg-green-500 h-full ease-in-out duration-300 rounded-full"></div>
+    </div>
+    <p>Will end in: <span id="end-time">0:00:00</span></p>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const endTimeElement = document.getElementById('end-time');
+    const progressBar = document.getElementById('progress-bar');
+
+    const socket = io();
+
+    socket.on('start-progress', (endTime) => {
+      console.log(endTime)
+      startProgress(endTime);
+    });
+
+    function startProgress(endTime) {
+      const endTimeFormatted = formatTime(endTime);
+      endTimeElement.textContent = endTimeFormatted;
+      console.log(endTimeFormatted)
+      let width = 0;
+      let countdown = endTime;
+
+      const interval = setInterval(() => {
+        if (countdown < 1) {
+          clearInterval(interval);
+        } else {
+          width++;
+      let percentagePerSecond = (width / endTime) * 100;
+          let doune = 100 - percentagePerSecond;
+          progressBar.style.width = `${doune}%`;
+          countdown--;
+          endTimeElement.textContent = formatTime(countdown);
+        }
+      }, 1000); // Thời gian kết thúc * 10 để tạo một giá trị tăng dần cho thanh tiến trình
+    }
+
+    function formatTime(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+  </script>
+</body>
+</html>
